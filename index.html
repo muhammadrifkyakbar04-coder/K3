@@ -1,0 +1,1975 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0B5FA5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>Inspeksi K3</title>
+  <style>
+    :root {
+      --ink: #14202b;
+      --bg: #f3f6f9;
+      --bl: #0b5fa5;
+      --ok: #1b7f4c;
+      --no: #c9302c;
+      --or: #e8730c;
+      --na: #5c6b77;
+      --ln: #d6dee5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    body {
+      margin: 0;
+      font:
+        16px/1.4 system-ui,
+        sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      padding-bottom: 84px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: #fff;
+      border-bottom: 3px solid var(--bl);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+      flex: 1;
+      color: var(--bl);
+    }
+
+    .tag {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: var(--na);
+      color: #fff;
+    }
+
+    .on,
+    .tag.ok {
+      background: var(--ok);
+    }
+
+    .off,
+    .tag.no {
+      background: var(--no);
+    }
+
+    #gear {
+      border: 0;
+      background: none;
+      font-size: 24px;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    main {
+      padding: 12px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 12px;
+      margin: 10px 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    h3 {
+      margin: 10px 0 4px;
+      font-size: 16px;
+    }
+
+    select,
+    input,
+    textarea {
+      width: 100%;
+      min-height: 46px;
+      font: inherit;
+      padding: 8px 10px;
+      border: 2px solid var(--ln);
+      border-radius: 8px;
+      background: #fff;
+      margin: 5px 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+    }
+
+    .b {
+      width: 100%;
+      min-height: 50px;
+      margin: 6px 0;
+      border: 2px solid var(--bl);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--bl);
+      font: 700 16px system-ui;
+    }
+
+    .b.p {
+      background: var(--bl);
+      color: #fff;
+    }
+
+    .b.s {
+      width: auto;
+      min-height: 40px;
+      padding: 0 12px;
+      margin: 6px 6px 0 0;
+      font-size: 14px;
+    }
+
+    .b.big {
+      min-height: 60px;
+      font-size: 18px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #sc {
+      position: relative;
+      background: #0b1620;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 300px;
+    }
+
+    #sc .sh {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    #sc .sh button {
+      border: 0;
+      background: var(--or);
+      color: #fff;
+      font-size: 20px;
+      border-radius: 8px;
+      min-width: 44px;
+      min-height: 40px;
+    }
+
+    #sc .fr {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 230px;
+      height: 230px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .fr i {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border: 5px solid var(--or);
+    }
+
+    .fr i:nth-child(1) {
+      top: 0;
+      left: 0;
+      border-right: 0;
+      border-bottom: 0;
+    }
+
+    .fr i:nth-child(2) {
+      top: 0;
+      right: 0;
+      border-left: 0;
+      border-bottom: 0;
+    }
+
+    .fr i:nth-child(3) {
+      bottom: 0;
+      left: 0;
+      border-right: 0;
+      border-top: 0;
+    }
+
+    .fr i:nth-child(4) {
+      bottom: 0;
+      right: 0;
+      border-left: 0;
+      border-top: 0;
+    }
+
+    .u {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .pf img {
+      width: 92px;
+      height: 92px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: #e3eef8;
+    }
+
+    .mr {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      gap: 6px;
+      align-items: center;
+      border-top: 1px solid var(--ln);
+      padding: 2px 0;
+    }
+
+    .mr input,
+    .mr select {
+      margin: 2px 0;
+      border-color: transparent;
+      background: var(--bg);
+    }
+
+    .bn {
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      color: #fff;
+      margin: 10px 0;
+    }
+
+    .bn.ok {
+      background: var(--ok);
+    }
+
+    .bn.no {
+      background: var(--no);
+    }
+
+    .bn.wt {
+      background: var(--na);
+    }
+
+    .rw {
+      display: grid;
+      grid-template-columns: 1fr 24px 132px;
+      gap: 6px;
+      align-items: center;
+      background: #fff;
+      border-radius: 10px;
+      padding: 8px 10px;
+      margin: 6px 0;
+    }
+
+    .rw.i {
+      grid-template-columns: 1fr 132px;
+    }
+
+    .rw small {
+      display: block;
+      color: var(--na);
+    }
+
+    .rw.bad {
+      outline: 3px solid var(--no);
+    }
+
+    .rw .nt {
+      grid-column: 1/-1;
+    }
+
+    .rw select,
+    .rw input {
+      margin: 0;
+    }
+
+    .ic {
+      font-weight: 700;
+      text-align: center;
+      color: var(--na);
+    }
+
+    .ic.g {
+      color: var(--ok);
+    }
+
+    .ic.r {
+      color: var(--no);
+    }
+
+    .cx {
+      display: grid;
+      grid-template-columns: 1fr 112px auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .cx input,
+    .cx select {
+      margin: 2px 0;
+    }
+
+    .as {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .as img {
+      width: 110px;
+    }
+
+    .gg {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .gg img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .mut {
+      color: var(--na);
+      text-align: center;
+    }
+
+    small {
+      color: var(--na);
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: #fff;
+      border-top: 1px solid var(--ln);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    nav button {
+      min-height: 62px;
+      border: 0;
+      background: none;
+      color: var(--na);
+      font: 600 13px system-ui;
+    }
+
+    nav button.on {
+      color: var(--bl);
+      background: #e8f1fa;
+    }
+
+    .md {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 20;
+      padding: 16px;
+      overflow: auto;
+    }
+
+    #t {
+      position: fixed;
+      top: 70px;
+      left: 12px;
+      right: 12px;
+      z-index: 30;
+      background: #000;
+      color: #fff;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .li {
+      cursor: pointer;
+    }
+
+    .sv {
+      width: 22px;
+      height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    #gear {
+      color: var(--bl);
+    }
+
+    nav button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .bn small {
+      color: #fff;
+      font-weight: 400;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Inspeksi K3</h1>
+    <span id="net" class="tag">...</span><span id="pend" class="tag">0 pending</span><button id="gear"
+      aria-label="Setelan">
+      <svg class="sv" viewBox="0 0 24 24" aria-hidden="true">
+        <line x1="4" y1="21" x2="4" y2="14" />
+        <line x1="4" y1="10" x2="4" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="12" />
+        <line x1="12" y1="8" x2="12" y2="3" />
+        <line x1="20" y1="21" x2="20" y2="16" />
+        <line x1="20" y1="12" x2="20" y2="3" />
+        <line x1="1" y1="14" x2="7" y2="14" />
+        <line x1="9" y1="8" x2="15" y2="8" />
+        <line x1="17" y1="16" x2="23" y2="16" />
+      </svg>
+    </button>
+  </header>
+  <main>
+    <section class="v" id="v-doc" hidden>
+      <div class="card">
+        <h3>Tambah unit manual</h3>
+        <label>Kategori<select id="aj"></select></label>
+        <div id="af"></div>
+        <button class="b p" id="ab">Simpan dan buat QR</button>
+      </div>
+      <div class="card">
+        <h3>Impor aset dari Excel</h3>
+        <button class="b" id="tp">Download Template Excel (.xlsx)</button><label class="b"
+          style="display: flex; align-items: center; justify-content: center">Upload / Impor Excel (.xlsx / .csv)<input
+            type="file" id="im" accept=".xlsx,.csv" hidden /></label>
+        <div id="ir"></div>
+      </div>
+      <div class="card">
+        <h3>Galeri QR</h3>
+        <select id="gf"></select><input id="gs" type="search" placeholder="Cari kode unit atau lokasi" />
+        <div id="gc" class="mut"></div>
+        <button class="b p" id="apr">Cetak Stiker QR (Print Layout)</button>
+      </div>
+      <div id="al2"></div>
+    </section>
+    <section class="v" id="v-scan" hidden>
+      <div id="sc">
+        <div class="sh">
+          <span>Scanning QR Code...</span><button id="bt" hidden aria-label="Senter">
+            <svg class="sv" viewBox="0 0 24 24" aria-hidden="true">
+              <polygon points="13 2 4 14 12 14 11 22 20 10 12 10 13 2" />
+            </svg>
+          </button>
+        </div>
+        <div id="rd"></div>
+        <div class="fr"><i></i><i></i><i></i><i></i></div>
+      </div>
+      <button class="b p" id="bs">Mulai scan</button>
+      <label class="b" style="display: flex; align-items: center; justify-content: center">Upload Gambar QR dari
+        Galeri<input type="file" id="qi" accept="image/*" hidden /></label>
+      <div id="rd2" hidden></div>
+      <div class="card">
+        <h3>Pilih Unit Manual</h3>
+        <select id="ms"></select><button class="b" id="bm">Buka unit</button>
+      </div>
+    </section>
+    <section class="v" id="v-unit" hidden></section>
+    <section class="v" id="v-lap" hidden>
+      <div class="card">
+        <h3>Filter laporan</h3>
+        <label>Dari tanggal<input type="date" id="f1" /></label><label>Sampai tanggal<input type="date"
+            id="f2" /></label><label>Kategori<select id="f3"></select></label><label>Status<select id="f4">
+            <option value="">Semua status</option>
+            <option>OK</option>
+            <option>NOT OK</option>
+          </select></label><button class="b p big" id="ex">
+          Download Laporan Excel (.xlsx)
+        </button>
+      </div>
+      <input id="ls" type="search" placeholder="Cari kode unit atau lokasi" />
+      <div id="lr"></div>
+    </section>
+  </main>
+  <div class="md" id="md" hidden>
+    <div class="card">
+      <div class="row">
+        <h3>Setelan</h3>
+        <button class="b s" id="mx">Tutup</button>
+      </div>
+      <h3>Profil Inspektor</h3>
+      <input id="pn" placeholder="Nama Lengkap" /><input id="pi" placeholder="NIK" inputmode="numeric" />
+      <h3>Koneksi Database Pusat</h3>
+      <input id="hk" placeholder="URL Webhook Google Apps Script" /><button class="b" id="ht">
+        Tes koneksi
+      </button>
+      <p id="hr2"></p>
+      <button class="b" id="ps">Simpan</button><button class="b p big" id="bsync">Sinkronkan Data Sekarang</button>
+    </div>
+  </div>
+  <div class="md" id="gal" hidden>
+    <div class="card">
+      <div class="row">
+        <h3 id="gt"></h3>
+        <button class="b s" id="gx">Tutup</button>
+      </div>
+      <label class="b" style="display: flex; align-items: center; justify-content: center">+ Tambah foto (kamera /
+        galeri)<input type="file" id="gadd" accept="image/*" multiple hidden /></label>
+      <div class="gg" id="gg"></div>
+    </div>
+  </div>
+  <div id="t" hidden></div>
+  <nav>
+    <button data-v="doc">
+      <svg class="sv" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+        <polyline points="14 3 14 9 20 9" />
+      </svg>Documents</button><button data-v="scan">
+      <svg class="sv" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3" />
+        <line x1="4" y1="12" x2="20" y2="12" />
+      </svg>Inspection</button><button data-v="lap">
+      <svg class="sv" viewBox="0 0 24 24" aria-hidden="true">
+        <line x1="6" y1="20" x2="6" y2="11" />
+        <line x1="12" y1="20" x2="12" y2="4" />
+        <line x1="18" y1="20" x2="18" y2="14" />
+      </svg>Laporan
+    </button>
+  </nav>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    const DEFAULT_SCRIPT_URL = "";
+    // TEMPELKAN URL GOOGLE APPS SCRIPT ANDA DI DALAM TANDA KUTIP DI ATAS
+    // Format: Pertanyaan|Hint|tipe. Tipe: y Ya/Tidak, b Baik/Tidak Baik, a Tersedia/Tidak Tersedia, n angka, t teks. Awalan # = judul bagian.
+    const C = {
+      APAR: `Akses Tak Terhalang||y
+Nozzle & Selang|Rusak / Cacat / Tersumbat / Hilang
+Pin & Segel|Pin bengkok / Segel putus atau hilang
+Handle|Rusak / Cacat / Goyang / Tidak kokoh
+Tabung|Berkarat / Penyok / Kotor
+Pressure|Low Pressure / Over Pressure
+Expired Date|Tidak Baik jika Expired < 1 Bulan`,
+      "EYE WASH & EMERGENCY SHOWER": `Akses Tak Terhalang|Tidak terhalang & tidak terkunci|y
+Kondisi Fisik|Tidak ada cacat / karat / kerusakan
+Aliran Air|Keluar lancar, bersih & memadai
+Area Sekitar|Tidak ada genangan / ceceran air`,
+      HYDRANT: `#I. BOX
+Akses Tak Terhalang||y
+Kondisi box baik, bersih, tidak penyok, tidak berkarat
+Sign lengkap dan terbaca jelas
+#II. CONNECTOR
+Ukuran 1,5 inch kondisi baik, tidak bocor
+Ukuran 2,5 inch kondisi baik, tidak bocor
+#III. SELANG
+Jumlah selang||n
+Nomor aset selang||t
+Kondisi selang baik, tidak sobek, tidak kering, lock pin lengkap, kawat & klem kuat
+#IV. NOZZLE
+Jumlah nozzle||n
+Nomor aset nozzle||t
+Kondisi nozzle baik, tidak penyok, tidak berkarat, lock pin lengkap
+#V. PILAR HYDRAN
+Kondisi pilar hydran baik, tidak bocor
+#VI. KUNCI PILAR HYDRAN
+Tersedia kunci untuk membuka valve pilar hydran||a`,
+      "KOTAK P3K": `Akses Tak Terhalang|Tidak terhalang & tidak terkunci|y
+Dalam kondisi bersih dan tidak rusak
+Kassa Steril (1 Box)||a
+Perban Lebar 7.5 cm (2 Roll)||a
+Plester lebar 1 cm (1 roll)||a
+Plester cepat hansaplast (20 lembar)||a
+Kapas (50 gram)||a
+Kain segitiga mitella (2 lembar)||a
+Gunting pembalut (1 pcs)||a
+Sarung tangan medis (2 pasang)||a
+Pinset anatomis (1 pcs)||a
+Betadine stick (8 pcs)||a
+Alcohol Swab 70% (20 lembar)||a
+Bioplacenton (1 tube)||a
+Thrombopop Gel (1 pcs)||a
+Buku Panduan P3K (1 pcs)||a
+Daftar Isi kotak P3K (1 Lembar)||a
+Form Penggunaan sarana P3K (1 lembar)||a`,
+      "LAMPU EMERGENCY": `Akses Tak Terhalang|Lampu emergency & saklar/socket tidak terhalang barang|y
+Saklar atau socket listrik bisa dijangkau dengan mudah||y
+Menyala normal, tidak redup, bertahan lebih dari 10 detik
+Kondisi fisik lampu bersih, tidak pecah, tidak ada tanda terbakar`,
+      "PINTU DARURAT (PINTU EMERGENCY)": `Akses Tak Terhalang||y
+Pintu bisa dibuka dengan mudah||y
+Pintu bisa menutup otomatis (engsel door closer berfungsi baik)
+Pintu bisa tertutup rapat||y
+Handle pintu kondisi baik, tidak mudah lepas, tidak macet
+Kondisi daun pintu tidak ada cacat, warna merah tidak pudar & kaca tidak pecah
+Tulisan serta sign pada pintu lengkap & terlihat jelas`,
+      "SPIL KIT B3 (SPILL KIT)": `Akses Tak Terhalang|Mudah diakses & tidak terkunci|y
+Drum tidak cacat / karat / kerusakan
+Majun / absorbent pad / Pillow tersedia dalam kondisi bersih dan siap pakai||a
+Spill Socks tersedia dalam kondisi bersih dan siap pakai||a
+APD sarung tangan chemical dari bahan karet tersedia dalam kondisi bersih dan siap pakai||a
+APD Pelindung mata tersedia dalam kondisi bersih dan siap pakai||a`,
+      "TANDU DARURAT": `Akses Tak Terhalang|Mudah diakses & tidak terkunci|y
+Tidak ada kerusakan
+Tersedia Sabuk Pengaman||a
+Kondisi Bersih`,
+      "WATER FOUNTAIN": `Akses Tak Terhalang||y
+Kebersihan
+Suhu air
+Aliran air
+Kondisi fisik`,
+    };
+    const OPT = {
+      y: ["Ya", "Tidak", "N/A"],
+      b: ["Baik", "Tidak Baik", "N/A"],
+      a: ["Tersedia", "Tidak Tersedia", "N/A"],
+    },
+      BAD = ["Tidak", "Tidak Baik", "Tidak Tersedia"];
+    // Struktur data unit. Kunci no = ID utama QR, lokasi = detail lokasi, lainnya disimpan di x
+    const NL = [
+      ["no", "Nomor"],
+      ["lokasi", "Detail Lokasi"],
+    ];
+    const SC = {
+      APAR: {
+        e: "APAR",
+        f: [
+          ["no", "Kode Lokasi"],
+          ["lokasi", "Detail Lokasi"],
+          ["noa", "NO Asset APAR"],
+          ["jns", "Jenis APAR", ["CO2", "Gas", "Powder", "Powder Metalize"]],
+          ["exp", "Expired Date", "date"],
+        ],
+      },
+      "EYE WASH & EMERGENCY SHOWER": {
+        e: "EYE WASH",
+        f: [
+          ["no", "Nomor"],
+          ["jns", "Jenis", ["Eye Wash", "Emergency Shower", "Gabungan"]],
+          ["lokasi", "Detail Lokasi"],
+        ],
+      },
+      HYDRANT: {
+        e: "HYDRANT",
+        h: 1,
+        f: [
+          ["no", "Nomor Box"],
+          ["lokasi", "Lokasi Detail"],
+        ],
+      },
+      "KOTAK P3K": {
+        e: "P3K",
+        f: [
+          ["no", "Nomor Kotak"],
+          ["lokasi", "Lokasi"],
+          ["pic", "PIC"],
+        ],
+      },
+      "LAMPU EMERGENCY": {
+        e: "LAMPU",
+        f: [
+          ["no", "Kode Lokasi"],
+          ["lokasi", "Detail Lokasi"],
+        ],
+      },
+      "PINTU DARURAT (PINTU EMERGENCY)": { e: "PINTU", f: NL },
+      "TANDU DARURAT": { e: "TANDU", f: NL },
+      "SPIL KIT B3 (SPILL KIT)": { e: "SPILL KIT", f: NL },
+      "WATER FOUNTAIN": { e: "WATER", f: NL },
+    };
+
+    const $ = (s) => document.querySelector(s),
+      pad = (n) => String(n).padStart(2, "0");
+    const fd = (d) =>
+      `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+    const fl = (d) =>
+      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const esc = (s) =>
+      String(s ?? "").replace(
+        /[&<>"]/g,
+        (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+      );
+    const dl = (b, n) => {
+      const l = document.createElement("a");
+      l.href = URL.createObjectURL(b);
+      l.download = n;
+      l.click();
+    };
+    function toast(m) {
+      const t = $("#t");
+      t.textContent = m;
+      t.hidden = false;
+      clearTimeout(toast.i);
+      toast.i = setTimeout(() => (t.hidden = true), 4500);
+    }
+    function parse(j) {
+      let sec = "",
+        n = 0,
+        o = [];
+      C[j].split("\n").forEach((l) => {
+        if (l[0] == "#") {
+          sec = l.slice(1);
+          return;
+        }
+        const [q, h, t] = l.split("|");
+        o.push({ no: ++n, sec, q, hint: h || "", t: t || "b" });
+      });
+      return o;
+    }
+    const ico = (k) =>
+      "data:image/svg+xml," +
+      encodeURIComponent(
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><rect width="80" height="80" rx="12" fill="#E8EEF4"/><rect x="12" y="12" width="56" height="56" rx="8" fill="none" stroke="#9FB1C2" stroke-width="2"/><text x="40" y="44" font-family="sans-serif" font-size="11" font-weight="700" fill="#5C6B77" text-anchor="middle">${SC[k].e}</text></svg>`,
+      );
+    const uid = () =>
+      Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    const norm = (ft) => {
+      ft.list = (ft.list || []).map((p) =>
+        typeof p == "string" ? { u: uid(), d: p, fid: "", s: 0 } : p,
+      );
+      if (typeof ft.prof == "string" && ft.prof)
+        ft.prof = { u: uid(), d: ft.prof, fid: "", s: 0 };
+      if (!ft.prof) ft.prof = null;
+      ft.del = ft.del || [];
+      return ft;
+    };
+    const savFt = async (ft) => {
+      norm(ft);
+      await put("fotos", ft);
+      const n =
+        (ft.prof && !ft.prof.s ? 1 : 0) +
+        ft.list.filter((p) => !p.s).length +
+        ft.del.length;
+      n ? await put("fpend", { id: ft.id, n }) : await del("fpend", ft.id);
+    };
+    const comp = (f, m) =>
+      new Promise((res) => {
+        const i = new Image();
+        i.onload = () => {
+          const k = Math.min(1, m / Math.max(i.width, i.height)),
+            c = document.createElement("canvas");
+          c.width = Math.round(i.width * k);
+          c.height = Math.round(i.height * k);
+          c.getContext("2d").drawImage(i, 0, 0, c.width, c.height);
+          URL.revokeObjectURL(i.src);
+          res(c.toDataURL("image/jpeg", 0.65));
+        };
+        i.src = URL.createObjectURL(f);
+      });
+
+    // IndexedDB
+    const db = new Promise((ok, er) => {
+      const q = indexedDB.open("k3", 4);
+      q.onupgradeneeded = (e) => {
+        const d = q.result;
+        if (e.oldVersion == 1) d.deleteObjectStore("assets");
+        [
+          ["assets", "id"],
+          ["insp", "id"],
+          ["meta", "k"],
+          ["fotos", "id"],
+          ["fpend", "id"],
+        ].forEach(
+          ([n, k]) =>
+            d.objectStoreNames.contains(n) ||
+            d.createObjectStore(n, { keyPath: k }),
+        );
+      };
+      q.onsuccess = () => ok(q.result);
+      q.onerror = () => er(q.error);
+    });
+    const tx = async (s, m, f) => {
+      const d = await db;
+      return new Promise((ok, er) => {
+        const t = d.transaction(s, m),
+          r = f(t.objectStore(s));
+        t.oncomplete = () => ok(r.result);
+        t.onerror = () => er(t.error);
+      });
+    };
+    const put = (s, v) => tx(s, "readwrite", (o) => o.put(v)),
+      all = (s) => tx(s, "readonly", (o) => o.getAll()),
+      get = (s, k) => tx(s, "readonly", (o) => o.get(k)),
+      del = (s, k) => tx(s, "readwrite", (o) => o.delete(k));
+
+    let P = null,
+      H = "",
+      cur = null,
+      QR = null,
+      torch = false,
+      busy = false,
+      syncing = false,
+      SE = "";
+    const R = {};
+    const det = (a) => [
+      ...SC[a.jenis].f
+        .filter((f) => f[0] != "no" && f[0] != "lokasi")
+        .map(([k, l]) => `${l}: ${(a.x || {})[k] || "-"}`),
+      ...(a.c || []).map((c) => `${c.t} ${c.no} (${c.jn})`),
+    ];
+    const noAsset = (a) =>
+      a.jenis == "APAR"
+        ? (a.x || {}).noa || ""
+        : SC[a.jenis].h
+          ? (a.c || []).map((c) => `${c.t} ${c.no}`).join(", ")
+          : a.no;
+    const extra = (a) =>
+      SC[a.jenis].f
+        .filter((f) => !["no", "lokasi", "noa"].includes(f[0]))
+        .map(([k, l]) => `${l}: ${(a.x || {})[k] || "-"}`)
+        .join(", ");
+    const hist = async (a) =>
+      (await all("insp"))
+        .filter((x) => x.aset == a.no && x.jenis == a.jenis)
+        .sort((p, q) => q.ts.localeCompare(p.ts));
+
+    async function net() {
+      const o = navigator.onLine;
+      $("#net").textContent = o ? "Online" : "Offline";
+      $("#net").className = "tag " + (o ? "on" : "off");
+      $("#pend").textContent =
+        (await all("insp")).filter((x) => !x.synced).length +
+        (await all("assets")).filter((x) => !x.synced).length +
+        (await all("fpend")).reduce((t, f) => t + f.n, 0) +
+        " pending";
+    }
+    async function go(v) {
+      if (QR) await scanStop();
+      document
+        .querySelectorAll(".v")
+        .forEach((s) => (s.hidden = s.id != "v-" + v));
+      document
+        .querySelectorAll("nav button")
+        .forEach((b) =>
+          b.classList.toggle("on", b.dataset.v == (v == "unit" ? "scan" : v)),
+        );
+      await R[v]();
+      scrollTo(0, 0);
+      net();
+    }
+    document
+      .querySelectorAll("nav button")
+      .forEach((b) => (b.onclick = () => go(b.dataset.v)));
+
+    // Setelan dan profil
+    function openSet() {
+      $("#pn").value = P?.nama || "";
+      $("#pi").value = P?.nik || "";
+      $("#hk").value = H;
+      $("#hr2").textContent = "";
+      $("#mx").hidden = !P;
+      $("#md").hidden = false;
+    }
+    $("#gear").onclick = openSet;
+    $("#mx").onclick = () => ($("#md").hidden = true);
+    async function simpan() {
+      const n = $("#pn").value.trim(),
+        i = $("#pi").value.trim(),
+        u = $("#hk").value.trim();
+      if (!n || !i) {
+        toast("Isi Nama Lengkap dan NIK.");
+        return false;
+      }
+      if (u) {
+        const m = urlOk(u);
+        if (m) {
+          toast(m);
+          return false;
+        }
+      }
+      P = { k: "profile", nama: n, nik: i };
+      H = u || DEFAULT_SCRIPT_URL;
+      await put("meta", P);
+      await put("meta", { k: "hook", v: u == DEFAULT_SCRIPT_URL ? "" : u });
+      return true;
+    }
+    $("#ps").onclick = async () => {
+      if (await simpan()) {
+        $("#md").hidden = true;
+        toast("Setelan tersimpan");
+        sync();
+      }
+    };
+    $("#bsync").onclick = async () => {
+      if (await simpan()) sync(true);
+    };
+    $("#ht").onclick = async () => {
+      const o = $("#hr2"),
+        u = $("#hk").value.trim(),
+        m = urlOk(u);
+      if (m) {
+        o.textContent = m;
+        return;
+      }
+      o.textContent = "Menguji koneksi...";
+      try {
+        const a = await call(u + "?tipe=aset"),
+          i = (await all("insp")).filter((x) => !x.synced).length,
+          n = (await all("assets")).filter((x) => !x.synced).length;
+        o.textContent = `Terhubung. Di pusat ada ${a.data.length} unit. Di HP ini menunggu terkirim: ${n} unit dan ${i} inspeksi.`;
+      } catch (e) {
+        o.textContent = "Gagal. " + e.message;
+      }
+    };
+
+    // Sinkronisasi 2 arah
+    const urlOk = (u) =>
+      !u
+        ? "URL masih kosong."
+        : !/^https:\/\/script\.google\.com\/.+\/exec$/.test(u)
+          ? "URL tidak valid. Harus berakhiran /exec (bukan /dev) dan berawalan https://script.google.com/"
+          : "";
+    async function call(url, opt) {
+      let r, t, j;
+      try {
+        r = await fetch(url, opt);
+      } catch (e) {
+        const x = new Error(
+          'Tidak bisa terhubung. Cek: URL berakhiran /exec, akses deployment "Siapa saja", dan jaringan.',
+        );
+        x.net = 1;
+        throw x;
+      }
+      t = await r.text();
+      try {
+        j = JSON.parse(t);
+      } catch (e) {
+        throw new Error(
+          /<html|<!doctype/i.test(t)
+            ? 'Google meminta login atau URL salah. Deploy ulang dengan akses "Siapa saja".'
+            : "Balasan server tidak dikenal: " + t.slice(0, 100),
+        );
+      }
+      if (!j.ok)
+        throw new Error(
+          "Server menolak (" +
+          (j.error || "tanpa pesan") +
+          "). Pastikan Code.gs terbaru sudah di-deploy sebagai Versi baru.",
+        );
+      return j;
+    }
+    async function sync(manual) {
+      if (syncing) return;
+      if (!navigator.onLine)
+        return manual && toast("Tidak ada sinyal internet.");
+      if (!H)
+        return (
+          manual &&
+          toast(
+            "URL Google Apps Script belum diisi. Buka Setelan (ikon roda gigi).",
+          )
+        );
+      syncing = true;
+      SE = "";
+      let ok = 0;
+      const L = (await all("insp")).filter((x) => !x.synced),
+        A = (await all("assets")).filter((a) => !a.synced);
+      try {
+        for (let i = 0; i < A.length; i += 100) {
+          const b = A.slice(i, i + 100);
+          toast(
+            `Mengirim unit ${Math.min(i + 100, A.length)} dari ${A.length}...`,
+          );
+          await call(H, {
+            method: "POST",
+            body: JSON.stringify({
+              tipe: "aset",
+              data: b.map((a) => ({
+                no: a.no,
+                jenis: a.jenis,
+                lokasi: a.lokasi,
+                x: a.x || {},
+                c: a.c || [],
+              })),
+            }),
+          });
+          for (const a of b) {
+            a.synced = 1;
+            await put("assets", a);
+          }
+        }
+        for (const x of L) {
+          toast(`Mengirim inspeksi ${ok + 1} dari ${L.length}...`);
+          try {
+            await call(H, { method: "POST", body: JSON.stringify(x) });
+            x.synced = 1;
+            await put("insp", x);
+            ok++;
+          } catch (e) {
+            if (e.net) throw e;
+            SE = e.message;
+          }
+        }
+        await pushFoto();
+        await pull();
+      } catch (e) {
+        SE = e.message;
+      }
+      syncing = false;
+      await net();
+      if (SE || manual || A.length || L.length)
+        toast(
+          SE
+            ? `Gagal. ${SE}`
+            : `Selesai. ${A.length} unit dan ${ok} inspeksi terkirim.`,
+        );
+      if (!$("#v-lap").hidden) R.lap();
+      if (!$("#v-doc").hidden) R.doc();
+      if (!$("#v-scan").hidden) msList();
+    }
+    async function pushFoto() {
+      for (const q of await all("fpend")) {
+        const f0 = await get("fotos", q.id);
+        if (!f0) {
+          await del("fpend", q.id);
+          continue;
+        }
+        const ft = norm(f0),
+          [jenis, ...r] = q.id.split("|"),
+          no = r.join("|"),
+          pst = (b) =>
+            call(H, {
+              method: "POST",
+              body: JSON.stringify({ jenis, no, ...b }),
+            });
+        try {
+          for (const fid of [...ft.del]) {
+            await pst({ tipe: "fotohapus", fid });
+            ft.del = ft.del.filter((z) => z != fid);
+            await savFt(ft);
+          }
+          for (const [p, k] of [
+            [ft.prof, "prof"],
+            ...ft.list.map((p) => [p, "gal"]),
+          ])
+            if (p && !p.s && p.d) {
+              toast(`Mengunggah foto ${no}...`);
+              const x = await pst({
+                tipe: "foto",
+                kind: k,
+                u: p.u,
+                data: p.d,
+              });
+              p.fid = x.fid;
+              p.s = 1;
+              await savFt(ft);
+            }
+        } catch (e) {
+          if (e.net) throw e;
+          SE = e.message;
+        }
+      }
+    }
+    async function pull() {
+      try {
+        const ra = await call(H + "?tipe=aset");
+        const Q = [],
+          FK = new Set(await tx("fotos", "readonly", (o) => o.getAllKeys()));
+        for (const a of ra.data)
+          if (a.no && C[a.jenis]) {
+            a.id = a.jenis + "|" + a.no;
+            a.x = a.x || {};
+            const m = a.f;
+            delete a.f;
+            const l = await get("assets", a.id);
+            if (!l || l.synced) {
+              a.synced = 1;
+              await put("assets", a);
+            }
+            if (m && (m.prof || (m.list || []).length || FK.has(a.id))) {
+              const ft = norm(
+                (await get("fotos", a.id)) || { id: a.id, list: [] },
+              ),
+                ml = m.list || [],
+                n0 = ft.list.length,
+                p0 = ft.prof;
+              if (
+                m.prof &&
+                (!ft.prof || (ft.prof.s && ft.prof.u != m.prof.u))
+              )
+                Q.push({ id: a.id, k: "prof", u: m.prof.u, fid: m.prof.fid });
+              ml.forEach((r) => {
+                if (
+                  !ft.list.some((p) => p.u == r.u) &&
+                  !ft.del.includes(r.fid)
+                )
+                  Q.push({ id: a.id, k: "gal", u: r.u, fid: r.fid });
+              });
+              ft.list = ft.list.filter(
+                (p) => !p.s || ml.some((r) => r.u == p.u),
+              );
+              if (!m.prof && ft.prof && ft.prof.s) ft.prof = null;
+              if (ft.list.length != n0 || ft.prof !== p0) await savFt(ft);
+            }
+          }
+        let nd = 0;
+        for (let i = 0; i < Q.length && nd < 60; i += 5) {
+          const b = Q.slice(i, i + 5);
+          toast(
+            `Mengunduh foto ${Math.min(i + 5, Q.length)} dari ${Q.length}...`,
+          );
+          const rf = await call(
+            H + "?fotos=" + b.map((q) => q.fid).join(","),
+          );
+          for (const q of b) {
+            const d = rf.data[q.fid];
+            if (!d) continue;
+            const ft = norm(
+              (await get("fotos", q.id)) || { id: q.id, list: [] },
+            ),
+              p = { u: q.u, d, fid: q.fid, s: 1 };
+            if (q.k == "prof") ft.prof = p;
+            else if (ft.list.length < 20 && !ft.list.some((x) => x.u == q.u))
+              ft.list.push(p);
+            await savFt(ft);
+            nd++;
+          }
+        }
+        const m = await get("meta", "lastPull"),
+          r = await call(H + "?sejak=" + (m ? m.v - 30 * 864e5 : 0)),
+          have = new Set((await all("insp")).map((x) => x.id));
+        for (const x of r.data)
+          if (!have.has(x.id)) {
+            x.tgl = fd(new Date(x.ts));
+            x.synced = 1;
+            x.remote = 1;
+            await put("insp", x);
+          }
+        await put("meta", { k: "lastPull", v: Date.now() });
+      } catch (e) {
+        SE = SE || "Gagal menarik data: " + e.message;
+      }
+    }
+    window.addEventListener("online", () => {
+      net();
+      sync();
+    });
+    window.addEventListener("offline", net);
+
+    // Scanner
+    async function scanStart() {
+      if (QR) return;
+      QR = new Html5Qrcode("rd");
+      try {
+        await QR.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 220, height: 220 } },
+          handleQR,
+          () => { },
+        );
+        $("#bs").textContent = "Hentikan scan";
+        $("#bt").hidden = false;
+      } catch (e) {
+        QR = null;
+        toast(
+          "Kamera tidak bisa dibuka. Izinkan akses kamera dan buka lewat https.",
+        );
+      }
+    }
+    async function scanStop() {
+      try {
+        await QR.stop();
+        QR.clear();
+      } catch (e) { }
+      QR = null;
+      torch = false;
+      $("#bs").textContent = "Mulai scan";
+      $("#bt").hidden = true;
+    }
+    async function handleQR(txt) {
+      if (busy) return;
+      busy = true;
+      let a;
+      try {
+        const o = JSON.parse(txt);
+        a = { no: o.a, jenis: o.j, lokasi: o.l, x: o.x || {}, c: o.c || [] };
+      } catch (e) {
+        a = await get("assets", txt.trim());
+      }
+      if (!a || !a.no || !SC[a.jenis]) {
+        toast("QR tidak dikenali");
+        setTimeout(() => (busy = false), 2000);
+        return;
+      }
+      if (QR) await scanStop();
+      a.id = a.jenis + "|" + a.no;
+      const l = await get("assets", a.id);
+      if (l) a = l;
+      else await put("assets", { ...a, synced: 0 });
+      busy = false;
+      openUnit(a);
+    }
+    $("#bs").onclick = () => (QR ? scanStop() : scanStart());
+    $("#bt").onclick = () => {
+      torch = !torch;
+      QR.applyVideoConstraints({ advanced: [{ torch }] }).catch(() =>
+        toast("Senter tidak didukung di perangkat ini"),
+      );
+    };
+    $("#qi").onchange = async (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      e.target.value = "";
+      if (QR) await scanStop();
+      try {
+        handleQR(await new Html5Qrcode("rd2").scanFile(f, false));
+      } catch (err) {
+        toast("QR tidak terbaca pada gambar ini.");
+      }
+    };
+    $("#bm").onclick = async () => {
+      const a = await get("assets", $("#ms").value);
+      a ? openUnit(a) : toast("Belum ada unit. Tambahkan di tab Documents.");
+    };
+    const msList = async () => {
+      const A = (await all("assets")).sort((a, b) =>
+        a.no.localeCompare(b.no),
+      );
+      $("#ms").innerHTML =
+        A.map(
+          (a) =>
+            `<option value="${esc(a.id)}">${esc(a.no)} (${esc(a.jenis)}, ${esc(a.lokasi)})</option>`,
+        ).join("") || '<option value="">Belum ada unit</option>';
+    };
+    R.scan = async () => {
+      await msList();
+      scanStart();
+    };
+
+    // Halaman unit: kartu, edit langsung, pemeriksaan
+    const fld = ([k, l, o], v = "", at = "data-af") =>
+      o == "date"
+        ? `<input type="date" ${at}="${k}" value="${esc(v)}">`
+        : Array.isArray(o)
+          ? `<select ${at}="${k}">${o.map((z) => `<option${z == v ? " selected" : ""}>${z}</option>`).join("")}</select>`
+          : `<input ${at}="${k}" value="${esc(v)}" placeholder="${l}">`;
+    const cxRow = (t, c = {}) =>
+      `<div class="cx"><input value="${esc(c.no || "")}" placeholder="Nomor aset ${t}"><select>${["1,5 inch", "2,5 inch"].map((z) => `<option${z == c.jn ? " selected" : ""}>${z}</option>`).join("")}</select><button class="b s" data-del="1">Hapus</button></div>`;
+    const cg = (cs = []) =>
+      ["Connector", "Selang", "Nozzle"]
+        .map(
+          (t) =>
+            `<div class="cg" data-t="${t}"><h3>${t}</h3><div class="cr">${cs
+              .filter((c) => c.t == t)
+              .map((c) => cxRow(t, c))
+              .join(
+                "",
+              )}</div><button class="b s" data-add="${t}">+ Tambah ${t}</button></div>`,
+        )
+        .join("");
+    const readC = (r) =>
+      [...r.querySelectorAll(".cx")]
+        .map((x) => ({
+          t: x.closest(".cg").dataset.t,
+          no: x.querySelector("input").value.trim(),
+          jn: x.querySelector("select").value,
+        }))
+        .filter((c) => c.no);
+    const cgClick = (e) => {
+      const d = e.target.dataset;
+      if (d.add) {
+        const r = document.createElement("div");
+        r.innerHTML = cxRow(d.add);
+        e.target.parentNode.querySelector(".cr").appendChild(r.firstChild);
+      }
+      if (d.del) e.target.closest(".cx").remove();
+    };
+    function openUnit(a) {
+      if (!P) return openSet();
+      cur = { a };
+      go("unit");
+    }
+    const ans = (i, it) => {
+      const o = OPT[i.t];
+      return o.includes(it.val)
+        ? it.val
+        : it.status == "NOT OK"
+          ? o[1]
+          : it.status == "N/A"
+            ? "N/A"
+            : it.status == "OK"
+              ? o[0]
+              : "";
+    };
+    R.unit = async () => {
+      const a = cur.a;
+      a.x = a.x || {};
+      const ft = norm((await get("fotos", a.id)) || { id: a.id, list: [] }),
+        last = (await hist(a))[0],
+        sc = SC[a.jenis],
+        L = parse(a.jenis);
+      cur.r = {};
+      cur.ft = ft;
+      if (last)
+        L.forEach((i) => {
+          const it =
+            last.items.find((z) => z.no == i.no && z.q == i.q) ||
+            last.items.find((z) => z.q == i.q);
+          if (!it) return;
+          if (OPT[i.t]) {
+            const v = ans(i, it);
+            if (v) cur.r[i.no] = { v, ket: it.ket || "" };
+          } else if (it.val) cur.r[i.no] = { val: String(it.val) };
+        });
+      if (a.jenis == "HYDRANT") {
+        const g = (t) => (a.c || []).filter((c) => c.t == t),
+          pre = {
+            6: g("Selang").length,
+            7: g("Selang")
+              .map((c) => c.no)
+              .join(", "),
+            9: g("Nozzle").length,
+            10: g("Nozzle")
+              .map((c) => c.no)
+              .join(", "),
+          };
+        Object.entries(pre).forEach(([n, v]) => {
+          if (v) cur.r[n] = { ...(cur.r[n] || {}), val: String(v) };
+        });
+      }
+      const nb = last ? bads(last).length : 0;
+      let h =
+        `<div class="card u"><label class="pf"><img id="pfi" src="${ft.prof ? ft.prof.d : ico(a.jenis)}"><input type="file" accept="image/*" id="pfin" hidden></label><div><h2 style="margin:0">${esc(a.no)}</h2><span class="tag">${esc(a.jenis)}</span></div></div><div class="card" id="mt">` +
+        sc.f
+          .filter((f) => f[0] != "no")
+          .map(
+            (f) =>
+              `<div class="mr"><span>${f[1]}</span>${fld(f, f[0] == "lokasi" ? a.lokasi : a.x[f[0]], "data-m")}</div>`,
+          )
+          .join("") +
+        (sc.h ? cg(a.c) : "") +
+        `<div class="mr"><span>Foto</span><button class="b s" id="gb">${ft.list.length}/20 &gt;</button></div></div>` +
+        `<div class="bn ${last ? (nb ? "no" : "ok") : "wt"}">Status Terakhir: ${last ? (nb ? "NOT OK (Ada Temuan)" : "OK") : "belum pernah diinspeksi"}<br><small>Last Inspected: ${last ? `${fl(new Date(last.ts))} oleh ${esc(last.inspektor)}` : "-"}</small></div><div id="bn" class="bn wt"></div>`;
+      let sec = "";
+      L.forEach((i) => {
+        if (i.sec !== sec) {
+          sec = i.sec;
+          h += `<h3>${esc(sec)}</h3>`;
+        }
+        const r = cur.r[i.no] || {};
+        if (OPT[i.t]) {
+          const v = r.v || "",
+            b = BAD.includes(v);
+          h += `<div class="rw" id="i${i.no}"><div><b>${i.no}. ${esc(i.q)}</b>${i.hint ? `<small>${esc(i.hint)}</small>` : ""}</div><span class="ic ${b ? "r" : v && v != "N/A" ? "g" : ""}" id="c${i.no}">${b ? "✕" : v && v != "N/A" ? "✓" : "–"}</span><select data-j="${i.no}"><option value="">Pilih</option>${OPT[i.t].map((o) => `<option${o == v ? " selected" : ""}>${o}</option>`).join("")}</select><input class="nt" data-k="${i.no}" placeholder="Catatan temuan (opsional)" value="${esc(r.ket || "")}"${b ? "" : " hidden"}></div>`;
+        } else
+          h += `<div class="rw i" id="i${i.no}"><div><b>${i.no}. ${esc(i.q)}</b></div><input data-v="${i.no}" type="${i.t == "n" ? "number" : "text"}" ${i.t == "n" ? 'inputmode="numeric" min="0"' : ""} value="${esc(r.val || "")}"></div>`;
+      });
+      $("#v-unit").innerHTML =
+        h +
+        `<button class="b p big" id="dn">Done (Simpan Hasil Inspeksi)</button>`;
+      upd();
+    };
+    function upd() {
+      const L = parse(cur.a.jenis).filter((i) => OPT[i.t]);
+      let bad = 0,
+        n = 0;
+      L.forEach((i) => {
+        const v = (cur.r[i.no] || {}).v;
+        if (v) n++;
+        if (BAD.includes(v)) bad++;
+      });
+      const b = $("#bn");
+      b.className = "bn " + (bad ? "no" : n == L.length ? "ok" : "wt");
+      b.textContent = bad
+        ? "Status : NOT OK (Ada Temuan)"
+        : n == L.length
+          ? "Status : OK"
+          : `Status : belum lengkap (${n}/${L.length})`;
+    }
+    async function saveMeta() {
+      const a = cur.a;
+      a.x = a.x || {};
+      document.querySelectorAll("#mt [data-m]").forEach((e) => {
+        const k = e.dataset.m,
+          v = e.value.trim();
+        if (k == "lokasi") {
+          if (v) a.lokasi = v;
+        } else a.x[k] = v;
+      });
+      if (SC[a.jenis].h) a.c = readC($("#mt"));
+      a.synced = 0;
+      await put("assets", a);
+      net();
+      toast("Data unit tersimpan");
+    }
+    const U = $("#v-unit");
+    U.addEventListener("click", (e) => {
+      cgClick(e);
+      if (e.target.dataset.del) saveMeta();
+      if (e.target.id == "gb") {
+        gal();
+        $("#gal").hidden = false;
+      }
+      if (e.target.id == "dn") done();
+    });
+    U.addEventListener("change", async (e) => {
+      const t = e.target,
+        n = t.dataset.j;
+      if (n) {
+        const v = t.value,
+          r = (cur.r[n] = cur.r[n] || {});
+        r.v = v;
+        const c = $("#c" + n);
+        c.textContent = BAD.includes(v) ? "✕" : v && v != "N/A" ? "✓" : "–";
+        c.className =
+          "ic " + (BAD.includes(v) ? "r" : v && v != "N/A" ? "g" : "");
+        t.parentNode.querySelector(".nt").hidden = !BAD.includes(v);
+        t.parentNode.classList.remove("bad");
+        upd();
+      } else if (t.dataset.k)
+        (cur.r[t.dataset.k] = cur.r[t.dataset.k] || {}).ket = t.value;
+      else if (t.dataset.v)
+        (cur.r[t.dataset.v] = cur.r[t.dataset.v] || {}).val = t.value;
+      else if (t.closest("#mt")) saveMeta();
+      else if (t.id == "pfin" && t.files[0]) {
+        const o = cur.ft.prof;
+        if (o && o.fid) cur.ft.del.push(o.fid);
+        cur.ft.prof = {
+          u: uid(),
+          d: await comp(t.files[0], 800),
+          fid: "",
+          s: 0,
+        };
+        await savFt(cur.ft);
+        $("#pfi").src = cur.ft.prof.d;
+        net();
+        sync();
+      }
+    });
+    U.addEventListener("input", (e) => {
+      const t = e.target;
+      if (t.dataset.k)
+        (cur.r[t.dataset.k] = cur.r[t.dataset.k] || {}).ket = t.value;
+      if (t.dataset.v)
+        (cur.r[t.dataset.v] = cur.r[t.dataset.v] || {}).val = t.value;
+    });
+    async function done() {
+      const a = cur.a,
+        L = parse(a.jenis),
+        bad = L.filter((i) => OPT[i.t] && !(cur.r[i.no] || {}).v).map(
+          (i) => i.no,
+        );
+      document
+        .querySelectorAll(".rw")
+        .forEach((el) =>
+          el.classList.toggle("bad", bad.includes(+el.id.slice(1))),
+        );
+      if (bad.length) {
+        $("#i" + bad[0]).scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+        return toast(`Masih ada ${bad.length} item yang belum dipilih.`);
+      }
+      const ts = new Date();
+      await put("insp", {
+        id: a.no + "_" + ts.getTime(),
+        ts: ts.toISOString(),
+        tgl: fd(ts),
+        inspektor: P.nama,
+        nik: P.nik,
+        info: det(a).join(" | "),
+        na: noAsset(a),
+        ex: extra(a),
+        aset: a.no,
+        lokasi: a.lokasi,
+        jenis: a.jenis,
+        synced: 0,
+        items: L.map((i) => {
+          const r = cur.r[i.no] || {},
+            v = OPT[i.t] ? r.v : r.val || "";
+          return {
+            no: i.no,
+            q: i.q,
+            status: OPT[i.t]
+              ? BAD.includes(v)
+                ? "NOT OK"
+                : v == "N/A"
+                  ? "N/A"
+                  : "OK"
+              : "OK",
+            val: v,
+            ket: BAD.includes(v) ? (r.ket || "").trim() : "",
+            foto: "",
+            fid: "",
+          };
+        }),
+      });
+      toast("Inspeksi tersimpan");
+      go("scan");
+      sync();
+    }
+    // Galeri foto unit (maks 20)
+    function gal() {
+      const l = cur.ft.list;
+      $("#gt").textContent = `Foto unit (${l.length}/20)`;
+      $("#gg").innerHTML = l
+        .map(
+          (p, i) =>
+            `<div><img src="${p.d}"><button class="b s" data-gd="${i}">Hapus</button><small>${p.s ? "tersinkron" : "menunggu sinkron"}</small></div>`,
+        )
+        .join("");
+      const b = $("#gb");
+      if (b) b.textContent = `${l.length}/20 >`;
+    }
+    $("#gx").onclick = () => ($("#gal").hidden = true);
+    $("#gadd").onchange = async (e) => {
+      for (const f of e.target.files) {
+        if (cur.ft.list.length >= 20) {
+          toast("Maksimal 20 foto per unit.");
+          break;
+        }
+        cur.ft.list.push({ u: uid(), d: await comp(f, 800), fid: "", s: 0 });
+      }
+      e.target.value = "";
+      await savFt(cur.ft);
+      gal();
+      net();
+      sync();
+    };
+    $("#gg").onclick = async (e) => {
+      const i = e.target.dataset.gd;
+      if (i == null) return;
+      const p = cur.ft.list.splice(+i, 1)[0];
+      if (p.fid) cur.ft.del.push(p.fid);
+      await savFt(cur.ft);
+      gal();
+      net();
+      sync();
+    };
+
+    // Documents: tambah unit, QR, galeri, impor Excel
+    function afForm() {
+      const sc = SC[$("#aj").value];
+      $("#af").innerHTML =
+        sc.f.map((f) => `<label>${f[1]}${fld(f)}</label>`).join("") +
+        (sc.h ? cg() : "");
+    }
+    $("#aj").onchange = afForm;
+    $("#af").onclick = cgClick;
+    $("#ab").onclick = async () => {
+      const k = $("#aj").value,
+        a = { jenis: k, x: {}, synced: 0 };
+      let bad = 0;
+      document.querySelectorAll("#af [data-af]").forEach((e) => {
+        const v = e.value.trim(),
+          f = e.dataset.af;
+        if (!v && e.type != "date") bad = 1;
+        if (f == "no" || f == "lokasi") a[f] = v;
+        else a.x[f] = v;
+      });
+      if (bad) return toast("Lengkapi semua kolom.");
+      if (SC[k].h) a.c = readC($("#af"));
+      a.id = k + "|" + a.no;
+      await put("assets", a);
+      afForm();
+      toast("Unit tersimpan. QR langsung muncul di galeri.");
+      net();
+      sync();
+      R.doc();
+    };
+    const QC = {};
+    function qrCanvas(a) {
+      const k = JSON.stringify([a.id, a.lokasi, a.x, a.c]);
+      if (QC[k]) return Promise.resolve(QC[k]);
+      return new Promise((res) => {
+        const d = document.createElement("div");
+        new QRCode(d, {
+          text: JSON.stringify({
+            a: a.no,
+            j: a.jenis,
+            l: a.lokasi,
+            x: a.x,
+            c: a.c,
+          }),
+          width: 300,
+          height: 300,
+          correctLevel: QRCode.CorrectLevel.M,
+        });
+        setTimeout(() => {
+          const q = d.querySelector("canvas"),
+            c = document.createElement("canvas");
+          c.width = 360;
+          c.height = 470;
+          const x = c.getContext("2d");
+          x.fillStyle = "#fff";
+          x.fillRect(0, 0, 360, 470);
+          x.drawImage(q, 30, 20, 300, 300);
+          x.fillStyle = "#000";
+          x.textAlign = "center";
+          x.font = "bold 30px sans-serif";
+          x.fillText(a.no, 180, 365, 330);
+          x.font = "22px sans-serif";
+          x.fillText(a.lokasi, 180, 400, 330);
+          x.font = "18px sans-serif";
+          x.fillText(a.jenis, 180, 435, 330);
+          x.strokeRect(2, 2, 356, 466);
+          res((QC[k] = c.toDataURL()));
+        }, 10);
+      });
+    }
+    const flt = (A) => {
+      const k = $("#gf").value,
+        q = $("#gs").value.toLowerCase();
+      return A.filter(
+        (a) =>
+          (!k || a.jenis == k) &&
+          (!q || (a.no + " " + a.lokasi).toLowerCase().includes(q)),
+      );
+    };
+    R.doc = async () => {
+      const gf = $("#gf");
+      if (!gf.options.length) {
+        const o = Object.keys(C)
+          .map((k) => `<option>${esc(k)}</option>`)
+          .join("");
+        $("#aj").innerHTML = o;
+        gf.innerHTML = '<option value="">Semua kategori</option>' + o;
+        afForm();
+      }
+      const A = flt(await all("assets")).sort((a, b) =>
+        a.no.localeCompare(b.no),
+      ),
+        Q = await Promise.all(A.map(qrCanvas));
+      $("#gc").textContent = A.length + " unit ditampilkan";
+      $("#al2").innerHTML =
+        A.map((a, i) => {
+          const n = esc(a.id);
+          return `<div class="card as"><img src="${Q[i]}"><div><b>${esc(a.no)}</b><br>${esc(a.jenis)}<br>${esc(a.lokasi)}${det(
+            a,
+          )
+            .map((d) => `<br><small>${esc(d)}</small>`)
+            .join(
+              "",
+            )}<br><button class="b s" data-x="dl" data-a="${n}">Unduh</button><button class="b s" data-x="pr" data-a="${n}">Cetak</button><button class="b s" data-x="rm" data-a="${n}">Hapus</button></div></div>`;
+        }).join("") || '<p class="mut">Belum ada unit.</p>';
+    };
+    $("#gf").onchange = $("#gs").oninput = () => R.doc();
+    async function prn(A, w) {
+      const im = [];
+      for (const a of A) im.push(`<img src="${await qrCanvas(a)}">`);
+      w.document.write(
+        "<style>@page{margin:8mm}body{margin:0}img{width:6.2cm;margin:2mm;break-inside:avoid}</style>" +
+        im.join(""),
+      );
+      w.document.close();
+      setTimeout(() => w.print(), 500);
+    }
+    $("#v-doc").addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-x]");
+      if (!b) return;
+      const x = b.dataset.x,
+        w = x == "pr" ? open("") : null,
+        a = await get("assets", b.dataset.a);
+      if (x == "rm") {
+        if (confirm("Hapus unit ini dari HP?")) {
+          await del("assets", a.id);
+          R.doc();
+        }
+      } else if (x == "dl") {
+        const l = document.createElement("a");
+        l.href = await qrCanvas(a);
+        l.download = "QR_" + a.no + ".png";
+        l.click();
+      } else if (x == "pr") prn([a], w);
+    });
+    $("#apr").onclick = () => {
+      const w = open("");
+      all("assets").then((A) => prn(flt(A), w));
+    };
+    const nz = (v) => v.toUpperCase().replace(/\s+/g, " ").trim(),
+      jenisDari = (v) => {
+        const b = nz(v);
+        return b
+          ? Object.keys(C).find((k) => {
+            const a = nz(k);
+            return a == b || (b.length > 3 && a.startsWith(b));
+          })
+          : "";
+      };
+    const hd = (l) => l.replace(/ /g, "_"),
+      sn = (k) => k.replace(/ \(.*\)$/, ""),
+      cols = (k) =>
+        SC[k].f
+          .map((f) => hd(f[1]))
+          .concat(
+            SC[k].h
+              ? ["Komponen", "Nomor_Aset_Komponen", "Jenis_Komponen"]
+              : [],
+          );
+    $("#tp").onclick = () => {
+      const wb = XLSX.utils.book_new();
+      Object.keys(C).forEach((k) => {
+        const ws = XLSX.utils.aoa_to_sheet([
+          cols(k),
+          ...(SC[k].h
+            ? [
+              [
+                "CONTOH-HYD",
+                "Halaman Depan",
+                "Selang",
+                "SLG-01",
+                "2,5 inch",
+              ],
+              [
+                "CONTOH-HYD",
+                "Halaman Depan",
+                "Nozzle",
+                "NZL-01",
+                "2,5 inch",
+              ],
+              [
+                "CONTOH-HYD",
+                "Halaman Depan",
+                "Connector",
+                "CON-01",
+                "1,5 inch",
+              ],
+            ]
+            : []),
+        ]);
+        ws["!cols"] = cols(k).map(() => ({ wch: 24 }));
+        XLSX.utils.book_append_sheet(wb, ws, sn(k));
+      });
+      dl(
+        new Blob([XLSX.write(wb, { type: "array", bookType: "xlsx" })]),
+        "Template_Aset_K3.xlsx",
+      );
+    };
+    $("#im").onchange = async (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      e.target.value = "";
+      try {
+        const wb = XLSX.read(await f.arrayBuffer(), {
+          type: "array",
+          cellDates: true,
+        }),
+          M = {},
+          sk = [];
+        let bad = 0;
+        wb.SheetNames.forEach((sh) => {
+          const k = jenisDari(sh);
+          if (!k) return sk.push(sh);
+          XLSX.utils
+            .sheet_to_json(wb.Sheets[sh], { defval: "" })
+            .forEach((r) => {
+              const g = (h) => {
+                let v = r[h] ?? "";
+                if (v instanceof Date) {
+                  const d = new Date(v.getTime() + 432e5);
+                  v = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+                }
+                return String(v).trim();
+              },
+                a = { jenis: k, x: {}, synced: 0 };
+              let ok = 1;
+              SC[k].f.forEach(([fk, l, o]) => {
+                let v = g(hd(l));
+                if (Array.isArray(o))
+                  v = o.find((z) => z.toLowerCase() == v.toLowerCase()) || "";
+                if (!v && o != "date") ok = 0;
+                if (fk == "no" || fk == "lokasi") a[fk] = v;
+                else a.x[fk] = v;
+              });
+              if (/^contoh/i.test(a.no || "")) return;
+              if (!ok) return bad++;
+              a.id = k + "|" + a.no;
+              const m = M[a.id] || (M[a.id] = a);
+              if (SC[k].h) {
+                m.c = m.c || [];
+                const t = ["Connector", "Selang", "Nozzle"].find(
+                  (z) => z.toLowerCase() == g("Komponen").toLowerCase(),
+                ),
+                  n = g("Nomor_Aset_Komponen"),
+                  j = ["1,5 inch", "2,5 inch"].find(
+                    (z) =>
+                      z ==
+                      g("Jenis_Komponen").toLowerCase().replace(".", ","),
+                  );
+                if (t && n && j) m.c.push({ t, no: n, jn: j });
+                else if (g("Komponen") || n) bad++;
+              }
+            });
+        });
+        const A = Object.values(M);
+        for (const a of A) await put("assets", a);
+        $("#gf").value = "";
+        $("#gs").value = "";
+        $("#ir").innerHTML =
+          `<p><b>${A.length}</b> unit berhasil dibaca dan disimpan. QR semuanya sudah dibuat di galeri.</p>${bad ? `<p>${bad} baris dilewati karena data kurang atau tidak valid.</p>` : ""}${sk.length ? `<p>Sheet tidak dikenal: ${esc(sk.join(", "))}</p>` : ""}`;
+        net();
+        sync();
+        R.doc();
+      } catch (err) {
+        toast("File tidak bisa dibaca. Pakai template yang disediakan.");
+      }
+    };
+
+    // Laporan: riwayat dan ekspor ringkas
+    const bads = (x) => x.items.filter((i) => i.status == "NOT OK");
+    R.lap = async () => {
+      if (!$("#f3").options.length)
+        $("#f3").innerHTML =
+          '<option value="">Semua kategori</option>' +
+          Object.keys(C)
+            .map((k) => `<option>${esc(k)}</option>`)
+            .join("");
+      const q = $("#ls").value.toLowerCase(),
+        L = (await all("insp"))
+          .filter(
+            (x) => !q || (x.aset + " " + x.lokasi).toLowerCase().includes(q),
+          )
+          .sort((a, b) => b.ts.localeCompare(a.ts));
+      $("#lr").innerHTML =
+        L.map((x) => {
+          const n = bads(x).length;
+          return `<div class="card li" data-id="${esc(x.id)}"><b>${esc(x.aset)}</b> <span class="tag ${n ? "no" : "ok"}">${n ? "NOT OK" : "OK"}</span><br>${esc(x.jenis)}, ${esc(x.lokasi)}<br><small>${fl(new Date(x.ts))} oleh ${esc(x.inspektor)}${x.synced ? "" : " (belum tersinkron)"}</small><div class="dt" hidden></div></div>`;
+        }).join("") || '<p class="mut">Belum ada inspeksi.</p>';
+    };
+    $("#ls").oninput = () => R.lap();
+    $("#lr").addEventListener("click", async (e) => {
+      const c = e.target.closest(".li");
+      if (!c) return;
+      const d = c.querySelector(".dt");
+      if (!d.hidden) {
+        d.hidden = true;
+        return;
+      }
+      const x = await get("insp", c.dataset.id),
+        ft = norm(
+          (await get("fotos", x.jenis + "|" + x.aset)) || {
+            id: "",
+            list: [],
+          },
+        );
+      d.innerHTML =
+        x.items
+          .map(
+            (i) =>
+              `<div><small>${i.no}. ${esc(i.q)}</small><br><b style="color:var(${i.status == "NOT OK" ? "--no" : "--ok"})">${esc(i.val || i.status)}</b>${i.ket ? ` (${esc(i.ket)})` : ""}</div>`,
+          )
+          .join("") +
+        (ft && ft.list.length
+          ? `<h3>Foto unit</h3><div class="gg">${ft.list
+            .slice(0, 9)
+            .map((z) => `<img src="${z.d}">`)
+            .join("")}</div>`
+          : "");
+      d.hidden = false;
+    });
+    $("#ex").onclick = async () => {
+      const f1 = $("#f1").value.replace(/-/g, ""),
+        f2 = $("#f2").value.replace(/-/g, ""),
+        k = $("#f3").value,
+        s = $("#f4").value,
+        rows = [];
+      for (const x of (await all("insp")).sort((a, b) =>
+        a.ts.localeCompare(b.ts),
+      )) {
+        const B = bads(x),
+          st = B.length ? "NOT OK" : "OK";
+        if (
+          (f1 && x.tgl < f1) ||
+          (f2 && x.tgl > f2) ||
+          (k && x.jenis != k) ||
+          (s && st != s)
+        )
+          continue;
+        const t = fl(new Date(x.ts));
+        rows.push({
+          "Tanggal Inspeksi": t.slice(0, 10),
+          Jam: t.slice(11),
+          "Nama Inspektor": x.inspektor,
+          NIK: x.nik || "",
+          "Kategori Unit": x.jenis,
+          "Kode / Nomor Unit": x.aset,
+          "No Asset": x.na || x.aset,
+          "Detail Lokasi": x.lokasi,
+          "Info Tambahan": x.ex ?? x.info ?? "",
+          "Status Akhir": st,
+          "Kesimpulan / Temuan": B.length
+            ? B.map((i) =>
+              `${i.q} ${i.val || ""}${i.ket ? ` (${i.ket})` : ""}`
+                .replace(/\s+/g, " ")
+                .trim(),
+            ).join(", ")
+            : "Unit OK",
+        });
+      }
+      if (!rows.length) return toast("Tidak ada data sesuai filter.");
+      const wb = XLSX.utils.book_new(),
+        ws = XLSX.utils.json_to_sheet(rows);
+      ws["!cols"] = [12, 8, 22, 18, 28, 18, 22, 28, 30, 12, 60].map((w) => ({
+        wch: w,
+      }));
+      XLSX.utils.book_append_sheet(wb, ws, "Rekap");
+      dl(
+        new Blob([XLSX.write(wb, { type: "array", bookType: "xlsx" })]),
+        `Laporan_K3_${fd(new Date())}.xlsx`,
+      );
+      toast("Laporan diunduh.");
+    };
+
+    // Mulai
+    (async () => {
+      if ("serviceWorker" in navigator)
+        navigator.serviceWorker.register("sw.js").catch(() => { });
+      P = (await get("meta", "profile")) || null;
+      if (P && !P.nik) P = null;
+      H = ((await get("meta", "hook")) || {}).v || DEFAULT_SCRIPT_URL;
+      const qh = new URLSearchParams(location.search).get("hook");
+      if (qh && !urlOk(qh)) {
+        H = qh;
+        await put("meta", { k: "hook", v: H });
+        history.replaceState(null, "", location.pathname);
+      }
+      await go("scan");
+      if (!P) openSet();
+      sync();
+    })();
+  </script>
+</body>
+
+</html>
